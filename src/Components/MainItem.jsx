@@ -1,14 +1,37 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { Modal } from "reactstrap";
-import "./Style/MainItem.css";
 import { ItemInput } from "./ListIndex";
+import firebase from "../Fire/Fire_Config";
+import "./Style/MainItem.css";
+import MainItemList from "./MainItemList";
 
 function MainItem() {
+  const [list, SetList] = useState([]);
   const [modal, setModal] = useState(false);
   const handleRegist = () => {
     setModal(!modal);
   };
+
+  useEffect(() => {
+    const fetchData = () => {
+      const db = firebase.firestore();
+      const dbRef = db.collection("Item").orderBy("createAt", "desc");
+      try {
+        dbRef.onSnapshot(snapshot => {
+          const listItem = snapshot.docs.map(doc => ({
+            key: doc.id,
+            ...doc.data()
+          }));
+          SetList(listItem);
+          console.log(listItem);
+        });
+      } catch (error) {
+        console.error("No such Data", error);
+        alert("No scuh Data");
+      }
+    };
+    return fetchData();
+  }, []);
 
   return (
     <div className="main-container">
@@ -27,19 +50,19 @@ function MainItem() {
               <th></th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>
-                <Link to="/detailItem/:id">Mask</Link>
-              </td>
-              <td>관리자</td>
-              <td>2020. 01. 20</td>
-              <td>
-                <input type="checkBox" />
-              </td>
-            </tr>
-          </tbody>
+          {list.map((list, index) => (
+            <tbody>
+              <MainItemList
+                id={list.id}
+                key={index}
+                itemNm={list.항목}
+                auth={list.등록자}
+                date={new Date(list.createAt.seconds * 1000).toLocaleDateString(
+                  "ko"
+                )}
+              />
+            </tbody>
+          ))}
         </table>
         <hr />
         <div className="main-btn">
@@ -47,7 +70,7 @@ function MainItem() {
             항목 추가
           </button>
           <Modal isOpen={modal} toggle={handleRegist}>
-            <ItemInput />
+            <ItemInput toggle={handleRegist} />
           </Modal>
           <button className="btn btn-outline-danger">항목 삭제</button>
         </div>
