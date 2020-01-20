@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Modal } from "reactstrap";
 import { ItemInput } from "./ListIndex";
+import { Link } from "react-router-dom";
 import firebase from "../Fire/Fire_Config";
 import "./Style/MainItem.css";
-import MainItemList from "./MainItemList";
 
 function MainItem() {
   const [list, SetList] = useState([]);
@@ -19,11 +19,11 @@ function MainItem() {
       try {
         dbRef.onSnapshot(snapshot => {
           const listItem = snapshot.docs.map(doc => ({
-            key: doc.id,
+            id: doc.id,
+            doc,
             ...doc.data()
           }));
           SetList(listItem);
-          console.log(listItem);
         });
       } catch (error) {
         console.error("No such Data", error);
@@ -33,6 +33,7 @@ function MainItem() {
     return fetchData();
   }, []);
 
+  console.log(list);
   return (
     <div className="main-container">
       <div className="main-title">
@@ -40,7 +41,7 @@ function MainItem() {
       </div>
       <hr />
       <div className="main-table">
-        <table className="table table-striped">
+        <table className="table table">
           <thead>
             <tr>
               <th>No.</th>
@@ -51,16 +52,24 @@ function MainItem() {
             </tr>
           </thead>
           {list.map((list, index) => (
-            <tbody>
-              <MainItemList
-                id={list.id}
-                key={index}
-                itemNm={list.항목}
-                auth={list.등록자}
-                date={new Date(list.createAt.seconds * 1000).toLocaleDateString(
-                  "ko"
-                )}
-              />
+            <tbody key={index}>
+              <tr>
+                <th scope="row">{index + 1}</th>
+                <td>
+                  <Link
+                    to={`/detailItem/${list.id}/`}
+                    style={{ color: "black", textDecoration: "none" }}
+                    id={list.id}
+                  >
+                    {list.제품이름}
+                  </Link>
+                </td>
+                <td style={{ textAlign: "center" }}>{list.등록자}</td>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(list.createAt.seconds * 1000).toLocaleString("ko")}
+                </td>
+                <td style={{ textAlign: "center" }}></td>
+              </tr>
             </tbody>
           ))}
         </table>
@@ -72,7 +81,6 @@ function MainItem() {
           <Modal isOpen={modal} toggle={handleRegist}>
             <ItemInput toggle={handleRegist} />
           </Modal>
-          <button className="btn btn-outline-danger">항목 삭제</button>
         </div>
       </div>
     </div>

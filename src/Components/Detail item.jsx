@@ -1,8 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import firebase from "../Fire/Fire_Config";
 import "./Style/DetailItem.css";
 
-function DetailItem() {
+function DetailItem(props) {
+  const detailId = props.match.params.id;
+  console.log(detailId);
+
+  const [details, setDetails] = useState([]);
+
+  useEffect(() => {
+    const fetchData = () => {
+      const db = firebase.firestore();
+      const dbRef = db.collection("Item").doc(detailId);
+      dbRef.get().then(doc => {
+        if (doc.exists) {
+          const dList = {
+            id: doc.id,
+            doc,
+            ...doc.data()
+          };
+          setDetails(dList);
+          console.log(dList);
+        }
+      });
+    };
+    return fetchData();
+  }, [detailId]);
+
   return (
     <div className="detail-container">
       <div className="detail-title">
@@ -20,17 +45,23 @@ function DetailItem() {
               <th></th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Gas Mask</td>
-              <td>관리자</td>
-              <td>2020. 01. 20</td>
-              <td>
-                <input type="checkBox" />
-              </td>
-            </tr>
-          </tbody>
+          {/*
+          {details.map((list, index) => (
+            <tbody key={index}>
+              <tr>
+                <th scope="row">{index + 1}</th>
+                <td>{list.제품이름}</td>
+                <td>{list.관리자}</td>
+                <td>
+                  {new Date(list.createAt.seconds * 1000).toLocaleString("ko")}
+                </td>
+                <td>
+                  <input type="checkBox" />
+                </td>
+              </tr>
+            </tbody>
+          ))}
+          */}
         </table>
         <hr />
         <div className="detail-btn">

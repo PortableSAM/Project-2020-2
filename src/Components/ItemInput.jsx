@@ -1,13 +1,11 @@
 import React from "react";
 import { Input, Col } from "reactstrap";
-import { Link } from "react-router-dom";
 import firebase from "../Fire/Fire_Config";
 import "./Style/ItemInput.css";
 
 function ItemInput() {
   const [regist, setRegist] = React.useState("");
   const [itemName, setItemName] = React.useState("");
-  const [type, setTpye] = React.useState("");
   const [lotNumber, setLotNumber] = React.useState("");
   const [quantity, setQuantity] = React.useState(Number);
   const [unit, setUnit] = React.useState("");
@@ -18,7 +16,6 @@ function ItemInput() {
 
   const newItem = {
     등록자: regist,
-    항목: type,
     제품이름: itemName,
     로트넘버: lotNumber,
     구매수량: quantity,
@@ -33,15 +30,15 @@ function ItemInput() {
     event.preventDefault();
     const db = firebase.firestore();
     try {
-      const dbRef = db.collection("Item");
-      dbRef.add(newItem);
+      const dbRef = db.collection("Item").doc();
+      dbRef.set(newItem);
       console.log("Save success");
     } catch (Error) {
       console.error("Save Failed", Error);
       alert("Save Failed");
     }
   };
-  console.log(newItem);
+
   return (
     <div className="item-container">
       <div className="input-title">
@@ -59,20 +56,6 @@ function ItemInput() {
         </div>
         <div className="item-name">
           <label name="ItemName">제품이름 : </label>
-          <Col lg={"auto"}>
-            <Input
-              type="select"
-              name="itemSelect"
-              lg={3}
-              defaultValue={setTpye}
-              onChange={e => setTpye(e.target.value)}
-            >
-              <option>Mask</option>
-              <option>Gloves</option>
-              <option>Tool</option>
-              <option>Office Supplies</option>
-            </Input>
-          </Col>
           <input
             type="text"
             placeholder="제품이름"
@@ -99,13 +82,19 @@ function ItemInput() {
             defaultValue={setQuantity}
             onChange={e => setQuantity(e.target.value)}
           />
-          <input
-            type="text"
-            name="unti"
-            placeholder="수량 단위"
-            defaultValue={setUnit}
-            onChange={e => setUnit(e.target.value)}
-          />
+          <Col lg={4}>
+            <Input
+              type="select"
+              name="unti"
+              placeholder="수량 단위"
+              defaultValue={setUnit}
+              onChange={e => setUnit(e.target.value)}
+            >
+              <option>set</option>
+              <option>EA</option>
+              <option>PK</option>
+            </Input>
+          </Col>
         </div>
         <div className="item-PurchasePrice">
           <label name="ItemPurchasePrice">구매단가 : </label>
@@ -136,15 +125,14 @@ function ItemInput() {
           onChange={e => setEtc(e.target.value)}
         />
       </div>
-      <Link to="/">
-        <button
-          className="btn btn-secondary"
-          type="submit"
-          onClick={handleFormInput}
-        >
-          등 록
-        </button>
-      </Link>
+
+      <button
+        className="btn btn-secondary"
+        type="submit"
+        onClick={handleFormInput}
+      >
+        등 록
+      </button>
     </div>
   );
 }

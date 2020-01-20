@@ -21,5 +21,8 @@
   justify-content: flex-end;
 }
 .main-btn button.btn:nth-child(1) {
-  margin-right: 50px;
+  margin-right: 20px;
+}
+.table > tbody > tr > td {
+  text-align: start;
 }

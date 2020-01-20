@@ -39,6 +39,9 @@
   border: none;
   border-bottom: 1px solid gray;
 }
+.item-Quantity {
+  display: flex;
+}
 .item-Quantity input:nth-child(3) {
   width: 80px;
 }
