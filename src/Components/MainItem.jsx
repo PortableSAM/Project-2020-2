@@ -100,7 +100,6 @@ function MainItem() {
             />
           ))}
         </table>
-        <hr />
         <div className="main-btn">
           <button className="btn btn-outline-info" onClick={handleRegist}>
             항목 추가
