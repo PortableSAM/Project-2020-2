@@ -18,7 +18,8 @@ function DetailItem(props) {
           const dList = {
             id: doc.id,
             doc,
-            ...doc.data()
+            ...doc.data(),
+            ...doc.data().createAt
           };
           setDetails(dList);
           console.log(dList);
@@ -30,47 +31,46 @@ function DetailItem(props) {
 
   return (
     <div className="detail-container">
-      <div className="detail-title">
-        <h2>Detail Item page</h2>
-      </div>
-      <hr />
-      <div className="detail-table">
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>No.</th>
-              <th>상세 품목</th>
-              <th>등록자</th>
-              <th>등록일자</th>
-              <th></th>
-            </tr>
-          </thead>
-          {/*
-          {details.map((list, index) => (
-            <tbody key={index}>
-              <tr>
-                <th scope="row">{index + 1}</th>
-                <td>{list.제품이름}</td>
-                <td>{list.관리자}</td>
-                <td>
-                  {new Date(list.createAt.seconds * 1000).toLocaleString("ko")}
-                </td>
-                <td>
-                  <input type="checkBox" />
-                </td>
-              </tr>
-            </tbody>
-          ))}
-          */}
-        </table>
-        <hr />
+      <form>
+        <div className="detail-item-spec">
+          <div className="detail-item-name">
+            <h4>{details.itemNm} Info</h4>
+          </div>
+          <div className="item-registor">
+            <label>- 등록자 : </label>
+            <p>{details.registor}</p>
+          </div>
+          <div className="regist-date">
+            <label>- 등록일 : </label>
+            <p>{new Date(details.seconds * 1000).toLocaleString("ko")}</p>
+          </div>
+          <div className="lot-number">
+            <label> - 로트번호 : </label>
+            <p>{details.lot}</p>
+          </div>
+          <div className="quantity">
+            <label>- 현재수량 : </label>
+            <p>{details.quantity}</p>
+            <p>{details.unit}</p>
+          </div>
+          <div className="price">
+            <label> - 구매가격 :</label>
+            <p>{details.price}</p>
+          </div>
+          <div className="etc">
+            <p>최근 구매일 {details.date}</p>
+            <p>기타 사항 :{details.etc}</p>
+          </div>
+        </div>
         <div className="detail-btn">
           <Link to="/">
             <button className="btn btn-outline-info">품목 리스트</button>
           </Link>
-          <button className="btn btn-outline-danger">상세 품목 삭제</button>
+          <Link to={`/itemUpdat/${details.id}`} details={details}>
+            <button className="btn btn-outline-danger">정보 수정</button>
+          </Link>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Col, Input, ModalFooter } from "reactstrap";
-//import { ItemInput } from "./ListIndex";
 import { Link } from "react-router-dom";
 import firebase from "../Fire/Fire_Config";
 import "./Style/MainItem.css";
+import Delete from "./Delete";
 
 function MainItem() {
   const [list, SetList] = useState([]);
@@ -24,15 +24,15 @@ function MainItem() {
   const newItemTime = firebase.firestore.Timestamp.fromDate(new Date());
 
   const newItemInfo = {
-    등록자: regist,
-    제품이름: itemName,
-    분류: itemType,
-    로트넘버: lotNumber,
-    구매수량: quantity,
-    수량단위: unit,
-    구매단가: price,
-    구매일자: date,
-    기타사항: etc,
+    registor: regist,
+    itemNm: itemName,
+    type: itemType,
+    lot: lotNumber,
+    quantity: quantity,
+    unit: unit,
+    price: price,
+    date: date,
+    etc: etc,
     createAt: newItemTime
   };
 
@@ -44,7 +44,7 @@ function MainItem() {
       const dbRef = db.collection("Item").doc();
       dbRef.set(newItemInfo);
       console.log("Save success");
-      //alert("Save success");]
+      //alert("Save success");
       return handleRegist();
     } catch (Error) {
       console.error("Save Failed", Error);
@@ -79,7 +79,6 @@ function MainItem() {
       <div className="main-title">
         <h2>Main Item page</h2>
       </div>
-      <hr />
       <div className="main-table">
         <table className="table table">
           <thead>
@@ -88,27 +87,29 @@ function MainItem() {
               <th>제품이름</th>
               <th>등록자</th>
               <th>등록일자</th>
-              <th></th>
+              <th>Delete</th>
             </tr>
           </thead>
           {list.map((list, index) => (
-            <tbody key={index}>
+            <tbody id={list.id} key={index}>
               <tr>
-                <th scope="row">{list.분류}</th>
+                <th scope="row">{list.type}</th>
                 <td>
                   <Link
                     to={`/detailItem/${list.id}/`}
                     style={{ color: "black", textDecoration: "none" }}
                     id={list.id}
                   >
-                    {list.제품이름}
+                    {list.itemNm}
                   </Link>
                 </td>
-                <td style={{ textAlign: "center" }}>{list.등록자}</td>
+                <td style={{ textAlign: "center" }}>{list.registor}</td>
                 <td style={{ textAlign: "center" }}>
                   {new Date(list.createAt.seconds * 1000).toLocaleString("ko")}
                 </td>
-                <td style={{ textAlign: "center" }}></td>
+                <td style={{ textAlign: "center" }}>
+                  <Delete id={list.id} />
+                </td>
               </tr>
             </tbody>
           ))}
@@ -119,7 +120,7 @@ function MainItem() {
             항목 추가
           </button>
           <Modal isOpen={modal} toggle={handleRegist}>
-            <form name="item-info">
+            <form name="item-info" method="POST">
               <div className="item-container">
                 <div className="input-title">
                   <h3>품목등록</h3>
@@ -142,7 +143,7 @@ function MainItem() {
                       defaultValue={setItemName}
                       onChange={e => setItemName(e.target.value)}
                     />
-                    <label Name="item-type">제품분류 :</label>
+                    <label name="item-type">제품분류 :</label>
                     <Col lg={4}>
                       <Input
                         type="select"
