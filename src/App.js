@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import { MainItem, DetailItem, itemUpdate } from "./Components/ListIndex";
+import { MainItem, DetailItem } from "./Components/ListIndex";
 import "./App.css";
 
 function App() {

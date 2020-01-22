@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Col, Input, ModalFooter } from "reactstrap";
-import { Link } from "react-router-dom";
 import firebase from "../Fire/Fire_Config";
 import "./Style/MainItem.css";
-import Delete from "./Delete";
+import View from "./MainView";
 
 function MainItem() {
   const [list, SetList] = useState([]);
@@ -91,27 +90,14 @@ function MainItem() {
             </tr>
           </thead>
           {list.map((list, index) => (
-            <tbody id={list.id} key={index}>
-              <tr>
-                <th scope="row">{list.type}</th>
-                <td>
-                  <Link
-                    to={`/detailItem/${list.id}/`}
-                    style={{ color: "black", textDecoration: "none" }}
-                    id={list.id}
-                  >
-                    {list.itemNm}
-                  </Link>
-                </td>
-                <td style={{ textAlign: "center" }}>{list.registor}</td>
-                <td style={{ textAlign: "center" }}>
-                  {new Date(list.createAt.seconds * 1000).toLocaleString("ko")}
-                </td>
-                <td style={{ textAlign: "center" }}>
-                  <Delete id={list.id} />
-                </td>
-              </tr>
-            </tbody>
+            <View
+              key={index}
+              id={list.id}
+              type={list.type}
+              itemNm={list.itemNm}
+              registor={list.registor}
+              date={new Date(list.createAt.seconds * 1000).toLocaleString("ko")}
+            />
           ))}
         </table>
         <hr />
