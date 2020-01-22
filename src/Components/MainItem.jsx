@@ -10,15 +10,16 @@ function MainItem() {
   const handleRegist = () => {
     setModal(!modal);
   };
+
   const [regist, setRegist] = useState();
-  const [itemName, setItemName] = useState();
-  const [itemType, setItemType] = useState();
-  const [lotNumber, setLotNumber] = useState();
-  const [quantity, setQuantity] = useState();
-  const [unit, setUnit] = useState();
-  const [price, setPrice] = useState();
-  const [date, setDate] = useState();
-  const [etc, setEtc] = useState();
+  const [itemName, setItemName] = useState(String);
+  const [itemType, setItemType] = useState(String);
+  const [lotNumber, setLotNumber] = useState(String);
+  const [quantity, setQuantity] = useState(String);
+  const [unit, setUnit] = useState(String);
+  const [price, setPrice] = useState(String);
+  const [date, setDate] = useState(String);
+  const [etc, setEtc] = useState(String);
 
   const newItemTime = firebase.firestore.Timestamp.fromDate(new Date());
 
@@ -35,19 +36,17 @@ function MainItem() {
     createAt: newItemTime
   };
 
-  console.log(newItemInfo);
   const handleFormInput = event => {
     event.preventDefault();
     const db = firebase.firestore();
-    try {
+    if (newItemInfo === String) {
+      console.log("No Data");
+    } else {
       const dbRef = db.collection("Item").doc();
-      dbRef.set(newItemInfo);
+      dbRef.set();
       console.log("Save success");
       //alert("Save success");
       return handleRegist();
-    } catch (Error) {
-      console.error("Save Failed", Error);
-      alert("Save Failed");
     }
   };
 

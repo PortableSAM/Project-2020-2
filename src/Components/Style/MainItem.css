@@ -34,7 +34,10 @@
   width: 100%;
 }
 .table > tbody > tr > td {
-  text-align: start;
+  text-align: center;
+}
+.table > tbody > tr > td > button:nth-child(1) {
+  margin-right: 0;
 }
 
 /*item input */

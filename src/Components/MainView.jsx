@@ -22,6 +22,7 @@ const View = ({ id, type, itemNm, date, registor }) => {
         <th scope="row">{type}</th>
         <td>
           <Link
+            id={id}
             to={`/detailItem/${id}`}
             style={{ color: "black", textDecoration: "none" }}
           >
